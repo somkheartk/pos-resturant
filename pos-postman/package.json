@@ -1,0 +1,9 @@
+{
+  "name": "pos-postman",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Postman collection and API summary for the POS monorepo",
+  "scripts": {
+    "validate": "python3 -m json.tool pos-monorepo.postman_collection.json >/dev/null && python3 -m json.tool pos-local.postman_environment.json >/dev/null"
+  }
+}

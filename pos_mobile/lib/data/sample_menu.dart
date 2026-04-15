@@ -1,0 +1,88 @@
+import '../models/menu_product.dart';
+
+const List<MenuProduct> sampleMenu = [
+  MenuProduct(
+    id: 'M001',
+    name: 'Americano',
+    price: 65,
+    category: 'Coffee',
+    imageUrl: 'https://images.unsplash.com/photo-1533777857318-d7e92e3fefd5?w=300&h=300&fit=crop',
+  ),
+  MenuProduct(
+    id: 'M002',
+    name: 'Latte',
+    price: 75,
+    category: 'Coffee',
+    imageUrl: 'https://images.unsplash.com/photo-1517668808822-9ebb02ae2a0e?w=300&h=300&fit=crop',
+  ),
+  MenuProduct(
+    id: 'M003',
+    name: 'Mocha',
+    price: 85,
+    category: 'Coffee',
+    imageUrl: 'https://images.unsplash.com/photo-1578432291840-8b604b8c9d4c?w=300&h=300&fit=crop',
+  ),
+  MenuProduct(
+    id: 'M004',
+    name: 'Cappuccino',
+    price: 75,
+    category: 'Coffee',
+    imageUrl: 'https://images.unsplash.com/photo-1572442694829-8cc84908e900?w=300&h=300&fit=crop',
+  ),
+  MenuProduct(
+    id: 'M005',
+    name: 'Green Tea Latte',
+    price: 80,
+    category: 'Tea',
+    imageUrl: 'https://images.unsplash.com/photo-1598318370833-8f7e6ba78ffc?w=300&h=300&fit=crop',
+  ),
+  MenuProduct(
+    id: 'M006',
+    name: 'Iced Matcha',
+    price: 85,
+    category: 'Tea',
+    imageUrl: 'https://images.unsplash.com/photo-1591081141981-7dc3d0b3bef6?w=300&h=300&fit=crop',
+  ),
+  MenuProduct(
+    id: 'M007',
+    name: 'Croissant',
+    price: 55,
+    category: 'Bakery',
+    imageUrl: 'https://images.unsplash.com/photo-1585315407507-f3a81c831145?w=300&h=300&fit=crop',
+  ),
+  MenuProduct(
+    id: 'M008',
+    name: 'Blueberry Muffin',
+    price: 60,
+    category: 'Bakery',
+    imageUrl: 'https://images.unsplash.com/photo-1598080784384-4e430a0d90be?w=300&h=300&fit=crop',
+  ),
+  MenuProduct(
+    id: 'M009',
+    name: 'Banana Cake',
+    price: 65,
+    category: 'Bakery',
+    imageUrl: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=300&h=300&fit=crop',
+  ),
+  MenuProduct(
+    id: 'M010',
+    name: 'Orange Juice',
+    price: 50,
+    category: 'Drinks',
+    imageUrl: 'https://images.unsplash.com/photo-1600271886742-f049cd1f21e4?w=300&h=300&fit=crop',
+  ),
+  MenuProduct(
+    id: 'M011',
+    name: 'Mango Smoothie',
+    price: 90,
+    category: 'Drinks',
+    imageUrl: 'https://images.unsplash.com/photo-1612528443702-f6741f70a049?w=300&h=300&fit=crop',
+  ),
+  MenuProduct(
+    id: 'M012',
+    name: 'Sparkling Water',
+    price: 35,
+    category: 'Drinks',
+    imageUrl: 'https://images.unsplash.com/photo-1554866585-acbb2f46b34c?w=300&h=300&fit=crop',
+  ),
+];

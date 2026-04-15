@@ -1,0 +1,10 @@
+{
+  "name": "pos-monorepo",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix pos-web run dev",
+    "build": "npm --prefix pos-web run build",
+    "lint": "npm --prefix pos-web run lint -- .",
+    "start": "npm --prefix pos-web run start"
+  }
+}

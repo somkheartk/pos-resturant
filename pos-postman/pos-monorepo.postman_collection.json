@@ -1,0 +1,452 @@
+{
+  "info": {
+    "name": "POS Monorepo API",
+    "description": "Postman collection for the POS monorepo. Includes direct backend APIs and the web proxy APIs used by each backoffice page.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    { "key": "baseBackend", "value": "http://localhost:3000/api/v1" },
+    { "key": "baseWeb", "value": "http://localhost:3010" },
+    { "key": "accessToken", "value": "" },
+    { "key": "orderId", "value": "" },
+    { "key": "productId", "value": "" },
+    { "key": "userId", "value": "" },
+    { "key": "inventoryId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "01 - Auth & Health",
+      "item": [
+        {
+          "name": "Health DB",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": {
+              "raw": "{{baseBackend}}/health/db",
+              "host": ["{{baseBackend}}"],
+              "path": ["health", "db"]
+            },
+            "description": "Database health endpoint"
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.accessToken) {",
+                  "  pm.environment.set('accessToken', json.accessToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@pos.local\",\n  \"password\": \"123456\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseBackend}}/auth/login",
+              "host": ["{{baseBackend}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login and save accessToken into the environment"
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Dashboard Page APIs",
+      "item": [
+        {
+          "name": "Web Dashboard Counts",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseWeb}}/api/dashboard/counts",
+              "host": ["{{baseWeb}}"],
+              "path": ["api", "dashboard", "counts"]
+            },
+            "description": "Used by the Dashboard page in the web app. Requires a valid NextAuth session cookie when called from Postman."
+          }
+        },
+        {
+          "name": "Backend Users List",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseBackend}}/users",
+              "host": ["{{baseBackend}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Backend Menu List",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseBackend}}/products",
+              "host": ["{{baseBackend}}"],
+              "path": ["products"]
+            }
+          }
+        },
+        {
+          "name": "Backend Inventory List",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseBackend}}/inventory",
+              "host": ["{{baseBackend}}"],
+              "path": ["inventory"]
+            }
+          }
+        },
+        {
+          "name": "Backend Orders List",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseBackend}}/orders",
+              "host": ["{{baseBackend}}"],
+              "path": ["orders"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Orders Page APIs",
+      "item": [
+        {
+          "name": "List Orders",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseBackend}}/orders",
+              "host": ["{{baseBackend}}"],
+              "path": ["orders"]
+            }
+          }
+        },
+        {
+          "name": "Create Food Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderNo\": \"SO-250415-0001\",\n  \"customerName\": \"Table 8\",\n  \"branchName\": \"Dining Hall A\",\n  \"totalAmount\": 387,\n  \"paymentMethod\": \"cash\",\n  \"itemCount\": 3,\n  \"items\": [\n    {\n      \"productId\": \"menu-001\",\n      \"productName\": \"Pad Thai Shrimp\",\n      \"quantity\": 1,\n      \"unitPrice\": 129\n    },\n    {\n      \"productId\": \"menu-002\",\n      \"productName\": \"Thai Milk Tea\",\n      \"quantity\": 2,\n      \"unitPrice\": 59\n    }\n  ],\n  \"note\": \"โต๊ะ 8 ไม่เผ็ด\",\n  \"status\": \"pending\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseBackend}}/orders",
+              "host": ["{{baseBackend}}"],
+              "path": ["orders"]
+            }
+          }
+        },
+        {
+          "name": "Update Order",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"paid\",\n  \"note\": \"ลูกค้าชำระเงินแล้ว\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseBackend}}/orders/{{orderId}}",
+              "host": ["{{baseBackend}}"],
+              "path": ["orders", "{{orderId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Order",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseBackend}}/orders/{{orderId}}",
+              "host": ["{{baseBackend}}"],
+              "path": ["orders", "{{orderId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - Food Menu Page APIs",
+      "item": [
+        {
+          "name": "List Menu",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseBackend}}/products",
+              "host": ["{{baseBackend}}"],
+              "path": ["products"]
+            }
+          }
+        },
+        {
+          "name": "Create Menu",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Tom Yum Soup\",\n  \"price\": 149,\n  \"isActive\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseBackend}}/products",
+              "host": ["{{baseBackend}}"],
+              "path": ["products"]
+            }
+          }
+        },
+        {
+          "name": "Update Menu",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 159,\n  \"isActive\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseBackend}}/products/{{productId}}",
+              "host": ["{{baseBackend}}"],
+              "path": ["products", "{{productId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Menu",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseBackend}}/products/{{productId}}",
+              "host": ["{{baseBackend}}"],
+              "path": ["products", "{{productId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 - Users Page APIs",
+      "item": [
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseBackend}}/users?page=1&pageSize=10&search=",
+              "host": ["{{baseBackend}}"],
+              "path": ["users"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "10" },
+                { "key": "search", "value": "" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cashier A\",\n  \"email\": \"cashier.a@pos.local\",\n  \"password\": \"123456\",\n  \"role\": \"staff\",\n  \"isActive\": true,\n  \"permissions\": [\"dashboard:view\", \"orders:view\"]\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseBackend}}/users",
+              "host": ["{{baseBackend}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"role\": \"manager\",\n  \"isActive\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseBackend}}/users/{{userId}}",
+              "host": ["{{baseBackend}}"],
+              "path": ["users", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseBackend}}/users/{{userId}}",
+              "host": ["{{baseBackend}}"],
+              "path": ["users", "{{userId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 - Inventory APIs",
+      "item": [
+        {
+          "name": "List Inventory",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseBackend}}/inventory",
+              "host": ["{{baseBackend}}"],
+              "path": ["inventory"]
+            }
+          }
+        },
+        {
+          "name": "Create Inventory Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sku\": \"ING-001\",\n  \"quantity\": 45,\n  \"location\": \"Cold Storage\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseBackend}}/inventory",
+              "host": ["{{baseBackend}}"],
+              "path": ["inventory"]
+            }
+          }
+        },
+        {
+          "name": "Update Inventory Item",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 32\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseBackend}}/inventory/{{inventoryId}}",
+              "host": ["{{baseBackend}}"],
+              "path": ["inventory", "{{inventoryId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Inventory Item",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseBackend}}/inventory/{{inventoryId}}",
+              "host": ["{{baseBackend}}"],
+              "path": ["inventory", "{{inventoryId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 - Web Proxy APIs",
+      "item": [
+        {
+          "name": "Web Orders",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseWeb}}/api/orders",
+              "host": ["{{baseWeb}}"],
+              "path": ["api", "orders"]
+            },
+            "description": "Web proxy route used by the Orders, Reports, and Tables pages. Requires browser session cookie in Postman."
+          }
+        },
+        {
+          "name": "Web Menu",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseWeb}}/api/products",
+              "host": ["{{baseWeb}}"],
+              "path": ["api", "products"]
+            },
+            "description": "Web proxy route for the Food Menu page. Requires browser session cookie in Postman."
+          }
+        },
+        {
+          "name": "Web Users",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseWeb}}/api/users?page=1&pageSize=10",
+              "host": ["{{baseWeb}}"],
+              "path": ["api", "users"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "10" }
+              ]
+            },
+            "description": "Web proxy route for the Users page. Requires browser session cookie in Postman."
+          }
+        }
+      ]
+    }
+  ]
+}
