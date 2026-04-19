@@ -15,6 +15,9 @@ function requiredPermissionForPath(pathname: string): string {
 }
 
 export default withAuth({
+  pages: {
+    signIn: "/login",
+  },
   callbacks: {
     authorized: ({ token, req }) => {
       if (!token) {
