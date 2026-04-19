@@ -5,6 +5,11 @@ import { HealthService } from './health.service';
 export class HealthController {
   constructor(private readonly healthService: HealthService) {}
 
+  @Get()
+  getAppHealth() {
+    return this.healthService.getAppHealth();
+  }
+
   @Get('db')
   async getDatabaseHealth() {
     return this.healthService.getDatabaseHealth();

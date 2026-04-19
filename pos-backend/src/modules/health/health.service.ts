@@ -6,6 +6,14 @@ import { Connection } from 'mongoose';
 export class HealthService {
   constructor(@InjectConnection() private readonly connection: Connection) {}
 
+  getAppHealth() {
+    return {
+      status: 'ok',
+      service: 'pos-backend',
+      timestamp: new Date().toISOString(),
+    };
+  }
+
   async getDatabaseHealth() {
     const db = this.connection.db;
 
